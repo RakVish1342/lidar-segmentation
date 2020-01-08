@@ -345,31 +345,45 @@ int main (int argc, char** argv)
         tree->insert(obstPoints[i],i);
     }
 
-    float distThreshClust = 1.0;
+    float distThreshClust = 0.6;
+    int minClusterPts = 20;
     std::vector<std::vector<int>> clusters = euclideanCluster(obstPoints, tree, distThreshClust);
 
   	// Render clusters
   	int clusterId = 0;
 	std::vector<Color> colors = {Color(1,0,0), Color(0,1,0), Color(0,0,1)};
-  	for(std::vector<int> cluster : clusters)
+
+    // Now just storing clusters as XYZ and not XYZI anymore
+    std::vector<typename pcl::PointCloud<pcl::PointXYZ>::Ptr> clustersCloud;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr clusterCloud(new pcl::PointCloud<pcl::PointXYZ>());
+    ProcessPointClouds<pcl::PointXYZ>* pointProcessor = new  ProcessPointClouds<pcl::PointXYZ>();
+    for(std::vector<int> cluster : clusters)
   	{
         // assign to cluster only if number of pts is significant
-        if(cluster.size() > 10)
+        if(cluster.size() > minClusterPts)
         {
-            pcl::PointCloud<pcl::PointXYZ>::Ptr clusterCloud(new pcl::PointCloud<pcl::PointXYZ>());
             for(int indice: cluster)
             {
-                clusterCloud->points.push_back(pcl::PointXYZ(obstPoints[indice][0], 
-                    obstPoints[indice][1], obstPoints[indice][2]));
+                clusterCloud->points.push_back( pcl::PointXYZ(obstPoints[indice][0], 
+                    obstPoints[indice][1], obstPoints[indice][2]) );
             }
             renderPointCloud(viewer, clusterCloud, "cluster"+std::to_string(clusterId), colors[clusterId%colors.size()]);
+            Box box = pointProcessor->BoundingBox(clusterCloud);
+            renderBox(viewer, box, clusterId);
+            clustersCloud.push_back(clusterCloud);
         }
+        clusterCloud->clear();
         ++clusterId;
   	}
   	if(clusters.size()==0)
     {
         std::cout << "No Clusters Found." << std::endl;
     }
+    else
+    {
+        std::cout << "Clusters Found:" << clustersCloud.size() << std::endl;
+    }
+    
 
 
     while (!viewer->wasStopped ())

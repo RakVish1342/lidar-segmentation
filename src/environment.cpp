@@ -4,7 +4,7 @@
 // using templates for processPointClouds so also include .cpp to help linker
 #include "processPointClouds.cpp"
 #include <unordered_set>
-#include "kdtree.cpp"
+#include "kdtreeClustering.cpp"
 
 std::vector<Car> initHighway(bool renderScene, pcl::visualization::PCLVisualizer::Ptr& viewer)
 {

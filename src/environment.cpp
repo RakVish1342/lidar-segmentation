@@ -337,12 +337,12 @@ void cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer,
     }
 
     float distThreshClust = 0.6;
-    int minClusterPts = 20;
+    int minClusterPts = 6;
     std::vector<std::vector<int>> clusters = euclideanCluster(obstPoints, tree, distThreshClust);
 
   	// Render clusters
   	int clusterId = 0;
-	std::vector<Color> colors = {Color(1,0,0), Color(0,1,0), Color(0,0,1)};
+	std::vector<Color> colors = {Color(1,1,0), Color(0,1,1), Color(1,0,1)};
 
     // Now just storing clusters as XYZ and not XYZI anymore
     std::vector<typename pcl::PointCloud<pcl::PointXYZ>::Ptr> clustersCloud;

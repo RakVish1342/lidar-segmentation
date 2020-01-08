@@ -31,7 +31,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr CreateData(std::vector<std::vector<float>> p
   		pcl::PointXYZ point;
   		point.x = points[i][0];
   		point.y = points[i][1];
-  		point.z = points[i][2];
+  		point.z = 0;
 
   		cloud->points.push_back(point);
 
@@ -120,7 +120,7 @@ int main ()
 {
 
 	// Create viewer
-	Box window;
+		Box window;
   	window.x_min = -10;
   	window.x_max =  10;
   	window.y_min = -10;
@@ -130,9 +130,7 @@ int main ()
 	pcl::visualization::PCLVisualizer::Ptr viewer = initScene(window, 25);
 
 	// Create data
-	std::vector<std::vector<float>> points = { {-6.2, 7, 1}, {-6.3, 8.4, 1}, {-5.2, 7.1, 1}, {-5.7, 6.3, 1}, 
-		{7.2, 6.1, 4}, {8.0, 5.3, 4}, {7.2, 7.1, 4}, 
-		{0.2, -7.1, -3}, {1.7, -6.9, -3}, {-1.2, -7.2, -3}, {2.2, -8.9, -3} };
+	std::vector<std::vector<float>> points = { {-6.2,7}, {-6.3,8.4}, {-5.2,7.1}, {-5.7,6.3}, {7.2,6.1}, {8.0,5.3}, {7.2,7.1}, {0.2,-7.1}, {1.7,-6.9}, {-1.2,-7.2}, {2.2,-8.9} };
 	//std::vector<std::vector<float>> points = { {-6.2,7}, {-6.3,8.4}, {-5.2,7.1}, {-5.7,6.3} };
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud = CreateData(points);
 
@@ -154,7 +152,6 @@ int main ()
 		}
   	std::cout << std::endl;
 
-
   	// Time segmentation process
   	auto startTime = std::chrono::steady_clock::now();
   	//
@@ -163,8 +160,6 @@ int main ()
   	auto endTime = std::chrono::steady_clock::now();
   	auto elapsedTime = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime);
   	std::cout << "clustering found " << clusters.size() << " and took " << elapsedTime.count() << " milliseconds" << std::endl;
-
-
 
   	// Render clusters
   	int clusterId = 0;

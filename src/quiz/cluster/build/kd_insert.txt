@@ -1,0 +1,102 @@
+root@1109c2bfd6a1:/home/workspace/SFND_Lidar_Obstacle_Detection/src/quiz/cluster
+/build# ./quizCluster 
+IN NULL
+0, -6.2, 7
+IN LEFT
+1, -6.3, 8.4
+IN NULL
+1, -6.3, 8.4
+IN RIGHT
+2, -5.2, 7.1
+IN NULL
+2, -5.2, 7.1
+IN RIGHT
+3, -5.7, 6.3
+IN LEFT
+3, -5.7, 6.3
+IN NULL
+3, -5.7, 6.3
+IN RIGHT
+4, 7.2, 6.1
+IN LEFT
+4, 7.2, 6.1
+IN RIGHT
+4, 7.2, 6.1
+IN NULL
+4, 7.2, 6.1
+IN RIGHT
+5, 8, 5.3
+IN LEFT
+5, 8, 5.3
+IN RIGHT
+5, 8, 5.3
+IN LEFT
+5, 8, 5.3
+IN NULL
+5, 8, 5.3
+IN RIGHT
+6, 7.2, 7.1
+IN RIGHT
+6, 7.2, 7.1
+IN NULL
+6, 7.2, 7.1
+IN RIGHT
+7, 0.2, -7.1
+IN LEFT
+7, 0.2, -7.1
+IN RIGHT
+7, 0.2, -7.1
+IN LEFT
+7, 0.2, -7.1
+IN LEFT
+7, 0.2, -7.1
+IN NULL
+7, 0.2, -7.1
+IN RIGHT
+8, 1.7, -6.9
+IN LEFT
+8, 1.7, -6.9
+IN RIGHT
+8, 1.7, -6.9
+IN LEFT
+8, 1.7, -6.9
+IN LEFT
+8, 1.7, -6.9
+IN RIGHT
+8, 1.7, -6.9
+IN NULL
+8, 1.7, -6.9
+IN RIGHT
+9, -1.2, -7.2
+IN LEFT
+9, -1.2, -7.2
+IN RIGHT
+9, -1.2, -7.2
+IN LEFT
+9, -1.2, -7.2
+IN LEFT
+9, -1.2, -7.2
+IN LEFT
+9, -1.2, -7.2
+IN NULL
+9, -1.2, -7.2
+IN RIGHT
+10, 2.2, -8.9
+IN LEFT
+10, 2.2, -8.9
+IN RIGHT
+10, 2.2, -8.9
+IN LEFT
+10, 2.2, -8.9
+IN LEFT
+10, 2.2, -8.9
+IN LEFT
+10, 2.2, -8.9
+IN RIGHT
+10, 2.2, -8.9
+IN NULL
+10, 2.2, -8.9
+Test Search
+#############
+0
+

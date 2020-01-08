@@ -36,8 +36,8 @@ struct KdTree
 		}
 		else
 		{
-			//Calculate current dimension
-			uint cd = depth % 3;
+			//Calculate current dim
+			uint cd = depth %2;
 
 			if(point[cd] < ((*node)->point[cd]))
 			{
@@ -65,23 +65,18 @@ struct KdTree
 	{
 		if(node!=NULL)
 		{
-			if( (node->point[0]>=(target[0]-distanceTol)) && (node->point[0]<=(target[0]+distanceTol)) && 
-				(node->point[1]>=(target[1]-distanceTol)) && (node->point[1]<=(target[1]+distanceTol)) &&
-				(node->point[2]>=(target[2]-distanceTol)) && (node->point[2]<=(target[2]+distanceTol)) )
+			if( (node->point[0]>=(target[0]-distanceTol)) && (node->point[0]<=(target[0]+distanceTol)) && (node->point[1]>=(target[1]-distanceTol)) && (node->point[1]<=(target[1]+distanceTol)) )
 			{
-				float distance = sqrt( (node->point[0]-target[0])*(node->point[0]-target[0]) + 
-					(node->point[1]-target[1])*(node->point[1]-target[1]) + 
-					(node->point[2]-target[2])*(node->point[2]-target[2]) + );
+				float distance = sqrt( (node->point[0]-target[0])*(node->point[0]-target[0]) + (node->point[1]-target[1])*(node->point[1]-target[1]) );
 				if(distance <= distanceTol)
 					ids.push_back(node->id);
 			}
 
-			int cd = depth % 3; //current dimension
 			//check across boundary
-			if((target[cd]-distanceTol) < node->point[cd])
+			if((target[depth%2]-distanceTol) < node->point[depth%2])
 				searchHelper(target, node->left, depth+1, distanceTol, ids);
-			if((target[cd]+distanceTol) > node->point[cd])
-				searchHelper(target, node->right, depth+1, distanceTol, ids);			
+			if((target[depth%2]+distanceTol) > node->point[depth%2])
+				searchHelper(target, node->right, depth+1, distanceTol, ids);				
 		}
 	}
 
@@ -93,6 +88,8 @@ struct KdTree
 
 		return ids;
 	}
+	
+
 };
 
 

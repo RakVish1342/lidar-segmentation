@@ -1,8 +1,4 @@
 /* \author Aaron Brown */
-// Quiz on implementing kd tree
-
-#include "../../render/render.h"
-
 
 // Structure to represent node of kd tree
 struct Node
@@ -54,7 +50,9 @@ struct KdTree
 		}	
 	}
 
-	void insert(std::vector<float> point, int id)
+	//void insert(std::vector<float> point, int id)
+	template <typename PointT>
+	void insert(pcl::PointT point, int id)
 	{
 		// TODO: Fill in this function to insert a new point into the tree
 		// the function should create a new node and place correctly with in the root 
@@ -71,7 +69,7 @@ struct KdTree
 			{
 				float distance = sqrt( (node->point[0]-target[0])*(node->point[0]-target[0]) + 
 					(node->point[1]-target[1])*(node->point[1]-target[1]) + 
-					(node->point[2]-target[2])*(node->point[2]-target[2]) + );
+					(node->point[2]-target[2])*(node->point[2]-target[2]) );
 				if(distance <= distanceTol)
 					ids.push_back(node->id);
 			}

@@ -280,11 +280,13 @@ void initCamera(CameraAngle setAngle, pcl::visualization::PCLVisualizer::Ptr& vi
         viewer->addCoordinateSystem (1.0);
 }
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer)
+void cityBlock(pcl::visualization::PCLVisualizer::Ptr &viewer, 
+                ProcessPointClouds<pcl::PointXYZI>* pointProcessorI, 
+                const pcl::PointCloud<pcl::PointXYZI>::Ptr& inputCloud)
 {
-    ProcessPointClouds<pcl::PointXYZI>* pointProcessorI = new  ProcessPointClouds<pcl::PointXYZI>();
-    pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud = pointProcessorI->loadPcd(
-        "../src/sensors/data/pcd/data_1/0000000001.pcd");
+    //ProcessPointClouds<pcl::PointXYZI>* pointProcessorI = new  ProcessPointClouds<pcl::PointXYZI>();
+    //pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud = pointProcessorI->loadPcd(
+    //    "../src/sensors/data/pcd/data_1/0000000001.pcd");
     //renderPointCloud(viewer, inputCloud, "inputCloud");
     std::cout << "inputCloud size: " << inputCloud->points.size() << std::endl;
     
@@ -299,23 +301,12 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr cityBlock(pcl::visualization::PCLVisualizer
         voxel_cube_size, minPoint, maxPoint);
     //renderPointCloud(viewer, filteredCloud, "filteredCloud");
     std::cout << "filteredCloud size: " << filteredCloud->points.size() << std::endl;
-    return filteredCloud;
-}
+    //return filteredCloud;
 
+    //$$ Remove this cloud copy
+    pcl::PointCloud<pcl::PointXYZI>::Ptr cityBlockCloud = filteredCloud;
 
-
-int main (int argc, char** argv)
-{
-    std::cout << "starting enviroment" << std::endl;
-
-    pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
-    CameraAngle setAngle = XY;
-    initCamera(setAngle, viewer);
-    //simpleHighway(viewer);
-    //cityBlock(viewer);
-    pcl::PointCloud<pcl::PointXYZI>::Ptr cityBlockCloud = cityBlock(viewer); //Voxeled/compressed cloud
-
-    ProcessPointClouds<pcl::PointXYZI>* pointProcessorI = new  ProcessPointClouds<pcl::PointXYZI>();
+    //ProcessPointClouds<pcl::PointXYZI>* pointProcessorI = new  ProcessPointClouds<pcl::PointXYZI>();
 
 /*
     //int maxIterPlaneSeg = cityBlockCloud->points.size()*0.4;
@@ -328,7 +319,7 @@ int main (int argc, char** argv)
     //$$ WAIIIT Should I interchange obst and plane??
 */
 
-    int maxIterPlaneSeg = 5000;
+    int maxIterPlaneSeg = 500;
     float distThreshPlaneSeg = 1.3;
     std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudVec = pointProcessorI->MySegmentPlane(cityBlockCloud, maxIterPlaneSeg, distThreshPlaneSeg, viewer);
     std::cout << "cityBlockCloud Num:" << cityBlockCloud->points.size();
@@ -383,11 +374,42 @@ int main (int argc, char** argv)
     {
         std::cout << "Clusters Found:" << clustersCloud.size() << std::endl;
     }
-    
+
+}
 
 
-    while (!viewer->wasStopped ())
+
+int main (int argc, char** argv)
+{
+    std::cout << "starting enviroment" << std::endl;
+
+    pcl::visualization::PCLVisualizer::Ptr viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
+    CameraAngle setAngle = XY;
+    initCamera(setAngle, viewer);
+    //simpleHighway(viewer);
+    //cityBlock(viewer);
+    //pcl::PointCloud<pcl::PointXYZI>::Ptr cityBlockCloud = cityBlock(viewer); //Voxeled/compressed cloud
+
+    ProcessPointClouds<pcl::PointXYZI>* pointProcessorI = new  ProcessPointClouds<pcl::PointXYZI>();
+    std::vector<boost::filesystem::path> stream = pointProcessorI->streamPcd("../src/sensors/data/pcd/data_1");
+    auto streamIterator = stream.begin();
+    pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloudI;
+
+    while (!viewer->wasStopped())
     {
-        viewer->spinOnce ();
-    } 
+        viewer->spinOnce();
+        viewer->removeAllPointClouds();
+        viewer->removeAllShapes();
+
+        inputCloudI = pointProcessorI->loadPcd((*streamIterator).string());
+        cityBlock(viewer, pointProcessorI, inputCloudI);
+
+        streamIterator++;
+        if(streamIterator == stream.end())
+        {
+            streamIterator = stream.begin();
+        }
+        viewer->spinOnce();
+    }
+
 }

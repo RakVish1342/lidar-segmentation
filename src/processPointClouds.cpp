@@ -248,13 +248,14 @@ std::vector<typename pcl::PointCloud<PointT>::Ptr> ProcessPointClouds<PointT>::M
         }
         else
         {
+            //For debugging to visualize the plane being detected
             //std::cout << "YES" << std::endl;
-            pcl::ModelCoefficients coeffsPlane;
-            coeffsPlane.values.push_back(a);
-            coeffsPlane.values.push_back(b);
-            coeffsPlane.values.push_back(c);
-            coeffsPlane.values.push_back(d);
-            viewer->addPlane(coeffsPlane, "plane");            
+            // pcl::ModelCoefficients coeffsPlane;
+            // coeffsPlane.values.push_back(a);
+            // coeffsPlane.values.push_back(b);
+            // coeffsPlane.values.push_back(c);
+            // coeffsPlane.values.push_back(d);
+            // viewer->addPlane(coeffsPlane, "plane");            
 
             // Measure distance between every point and fitted line
             // If distance is smaller than threshold count it as inlier

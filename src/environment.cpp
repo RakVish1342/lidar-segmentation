@@ -284,7 +284,7 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr cityBlock(pcl::visualization::PCLVisualizer
 {
     ProcessPointClouds<pcl::PointXYZI>* pointProcessorI = new  ProcessPointClouds<pcl::PointXYZI>();
     pcl::PointCloud<pcl::PointXYZI>::Ptr inputCloud = pointProcessorI->loadPcd(
-        "../src/sensors/data/pcd/data_1/0000000021.pcd");
+        "../src/sensors/data/pcd/data_1/0000000001.pcd");
     //renderPointCloud(viewer, inputCloud, "inputCloud");
     std::cout << "inputCloud size: " << inputCloud->points.size() << std::endl;
     
@@ -295,7 +295,8 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr cityBlock(pcl::visualization::PCLVisualizer
     float voxel_cube_size = 0.35;
 
     //pcl::PointCloud<pcl::PointXYZI>::Ptr filteredCloud = ProcessPointClouds<pcl::PointXYZI>::FilterCloud(inputCloud, 2.0, minPoint, maxPoint );
-    pcl::PointCloud<pcl::PointXYZI>::Ptr filteredCloud = pointProcessorI->FilterCloud(inputCloud, voxel_cube_size, minPoint, maxPoint );
+    pcl::PointCloud<pcl::PointXYZI>::Ptr filteredCloud = pointProcessorI->FilterCloud(inputCloud, 
+        voxel_cube_size, minPoint, maxPoint);
     //renderPointCloud(viewer, filteredCloud, "filteredCloud");
     std::cout << "filteredCloud size: " << filteredCloud->points.size() << std::endl;
     return filteredCloud;
@@ -331,9 +332,9 @@ int main (int argc, char** argv)
     float distThreshPlaneSeg = 1.3;
     std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> cloudVec = pointProcessorI->MySegmentPlane(cityBlockCloud, maxIterPlaneSeg, distThreshPlaneSeg, viewer);
     std::cout << "cityBlockCloud Num:" << cityBlockCloud->points.size();
-    renderPointCloud(viewer, cloudVec[0], "Plane Cloud", Color(0,1,0));
-    renderPointCloud(viewer, cloudVec[1], "Obst Cloud", Color(1,0,0));
-    renderPointCloud(viewer, cloudVec[2], "Plane Pts Cloud", Color(1,1,1));
+    //renderPointCloud(viewer, cloudVec[0], "Plane Cloud", Color(0,1,0));
+    //renderPointCloud(viewer, cloudVec[1], "Obst Cloud", Color(1,0,0));
+    //renderPointCloud(viewer, cloudVec[2], "Plane Pts Cloud", Color(1,1,1));
     //$$ WAIIIT Should I interchange obst and plane??
 
     KdTree* tree = new KdTree;
@@ -342,6 +343,32 @@ int main (int argc, char** argv)
     for (int i=0; i<obstPoints.size(); ++i)
     {
         tree->insert(obstPoints[i],i);
+    }
+
+    float distThreshClust = 1.0;
+    std::vector<std::vector<int>> clusters = euclideanCluster(obstPoints, tree, distThreshClust);
+
+  	// Render clusters
+  	int clusterId = 0;
+	std::vector<Color> colors = {Color(1,0,0), Color(0,1,0), Color(0,0,1)};
+  	for(std::vector<int> cluster : clusters)
+  	{
+        // assign to cluster only if number of pts is significant
+        if(cluster.size() > 10)
+        {
+            pcl::PointCloud<pcl::PointXYZ>::Ptr clusterCloud(new pcl::PointCloud<pcl::PointXYZ>());
+            for(int indice: cluster)
+            {
+                clusterCloud->points.push_back(pcl::PointXYZ(obstPoints[indice][0], 
+                    obstPoints[indice][1], obstPoints[indice][2]));
+            }
+            renderPointCloud(viewer, clusterCloud, "cluster"+std::to_string(clusterId), colors[clusterId%colors.size()]);
+        }
+        ++clusterId;
+  	}
+  	if(clusters.size()==0)
+    {
+        std::cout << "No Clusters Found." << std::endl;
     }
 
 
